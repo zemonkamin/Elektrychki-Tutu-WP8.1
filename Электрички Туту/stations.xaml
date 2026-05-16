@@ -1,0 +1,163 @@
+﻿<Page
+    x:Class="Электрички_Туту.stations"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Электрички_Туту"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="#FF000000">
+
+    <Page.Resources>
+        <SolidColorBrush x:Key="CardBackgroundBrush" Color="#FF000000"/>
+        <SolidColorBrush x:Key="HeaderMutedBrush" Color="#FF9DA3AE"/>
+        <SolidColorBrush x:Key="TimelineAccentBrush" Color="#FF0F7CFF"/>
+        <SolidColorBrush x:Key="TimelineMutedBrush" Color="#FF2F2F2F"/>
+        <SolidColorBrush x:Key="TimelineUpcomingBrush" Color="#FF7C7C7C"/>
+    </Page.Resources>
+
+    <Grid Background="#FF000000">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Grid Grid.Row="0" Background="{StaticResource CardBackgroundBrush}">
+            <StackPanel Margin="24,32,24,20">
+                <TextBlock x:Name="TrainNumberTextBlock" Text="ПОЕЗД №—" FontSize="26" FontWeight="Bold" Foreground="White" Margin="0,0,0,6"/>
+                <TextBlock x:Name="RouteTextBlock" Text="Маршрут" FontSize="22" FontWeight="SemiBold" Foreground="White" Margin="0,0,0,6"/>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock x:Name="TrainNameTextBlock" Text="Название" FontSize="18" Foreground="#FF43D17D" FontWeight="SemiBold"/>
+                    <TextBlock x:Name="TrainTypeTextBlock" Text="Тип поезда" FontSize="18" Foreground="{StaticResource HeaderMutedBrush}" Margin="12,0,0,0"/>
+                    <TextBlock x:Name="MovementModeTextBlock" Text="Режим" FontSize="18" Foreground="{StaticResource HeaderMutedBrush}" Margin="12,0,0,0"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                    <StackPanel>
+                        <TextBlock Text="Дата" Foreground="{StaticResource HeaderMutedBrush}" FontSize="12" CharacterSpacing="50"/>
+                        <TextBlock x:Name="DateTextBlock" Text="—" Foreground="White" FontSize="16" FontWeight="SemiBold"/>
+                    </StackPanel>
+                    <StackPanel Margin="24,0,0,0">
+                        <TextBlock Text="Перевозчик" Foreground="{StaticResource HeaderMutedBrush}" FontSize="12" CharacterSpacing="50"/>
+                        <TextBlock x:Name="CarrierTextBlock" Text="—" Foreground="White" FontSize="16" FontWeight="SemiBold"/>
+                    </StackPanel>
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+
+        <!-- Loading indicator -->
+        <ProgressRing x:Name="LoadingProgressRing"
+                      Grid.Row="1"
+                      Width="64"
+                      Height="64"
+                      IsActive="False"
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Center"
+                      Foreground="White"/>
+
+        <!-- Content -->
+        <ScrollViewer Grid.Row="1"
+                      VerticalScrollBarVisibility="Auto"
+                      Margin="0,0,0,20"
+                      x:Name="ContentScrollViewer"
+                      Visibility="Collapsed">
+            <StackPanel>
+                <TextBlock Text="Остановки"
+                           FontSize="20"
+                           FontWeight="SemiBold"
+                           Foreground="White"
+                           Margin="24,24,24,8"/>
+
+                <ListView x:Name="StationsListView"
+                          Margin="0,0,0,24"
+                          SelectionMode="None"
+                          Background="Transparent"
+                          IsItemClickEnabled="False">
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            <Setter Property="Padding" Value="0"/>
+                            <Setter Property="Margin" Value="0"/>
+                            <Setter Property="Background" Value="Transparent"/>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Border Padding="20,10,20,10">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="64"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="140"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid Grid.Column="0" Width="36" HorizontalAlignment="Center">
+                                    <Grid.RowDefinitions>
+                                            <RowDefinition Height="*"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="*"/>
+                                        </Grid.RowDefinitions>
+                                        <Rectangle Grid.Row="0"
+                                                   Width="4"
+                                                   Margin="0,-18,0,0"
+                                                   HorizontalAlignment="Center"
+                                                   Fill="{Binding TopConnectorBrush}"
+                                                   Visibility="{Binding TopConnectorVisibility}"/>
+                                        <Rectangle Grid.Row="1"
+                                                   Width="12"
+                                                   Height="12"
+                                                   StrokeThickness="2"
+                                                   HorizontalAlignment="Center"
+                                                   Fill="{Binding NodeFillBrush}"
+                                                   Stroke="{Binding NodeStrokeBrush}"/>
+                                        <Rectangle Grid.Row="2"
+                                                   Width="4"
+                                                   Margin="0,0,0,-18"
+                                                   HorizontalAlignment="Center"
+                                                   Fill="{Binding BottomConnectorBrush}"
+                                                   Visibility="{Binding BottomConnectorVisibility}"/>
+                                    </Grid>
+
+                                    <StackPanel Grid.Column="1" Margin="12,0,12,0">
+                                        <TextBlock Text="{Binding station}"
+                                                   FontSize="18"
+                                                   FontWeight="SemiBold"
+                                                   Foreground="White"
+                                                   TextWrapping="WrapWholeWords"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   MaxLines="2"/>
+                                        <TextBlock Text="{Binding StatusLabel}"
+                                                   FontSize="13"
+                                                   Foreground="{StaticResource HeaderMutedBrush}"
+                                                   TextWrapping="Wrap"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   MaxLines="2"/>
+                                    </StackPanel>
+
+                                    <StackPanel Grid.Column="2"
+                                                HorizontalAlignment="Stretch">
+                                        <TextBlock Text="{Binding actual_time}"
+                                                   FontSize="18"
+                                                   FontWeight="SemiBold"
+                                                   Foreground="White"
+                                                   TextAlignment="Right"
+                                                   TextWrapping="Wrap"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   MaxWidth="130"
+                                                   Margin="0,0,0,2"/>
+                                        <TextBlock Text="{Binding scheduled_time}"
+                                                   FontSize="13"
+                                                   Foreground="{StaticResource HeaderMutedBrush}"
+                                                   TextAlignment="Right"
+                                                   TextWrapping="Wrap"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   MaxWidth="130"/>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Page>
